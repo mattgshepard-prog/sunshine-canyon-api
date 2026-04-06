@@ -31,7 +31,13 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. The BEAPI token is reused across warm Vercel invocations (module-level cache) and does not trigger a new OAuth request within its valid window
   4. The GitHub Pages frontend domain receives a valid CORS response from all API routes
   5. Guesty credentials exist only in Vercel environment variables and are never present in any API response
-**Plans**: TBD
+**Plans**: 4 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Test scaffolds + package.json ES module config (Wave 0)
+- [ ] 01-02-PLAN.md — lib/guesty.js BEAPI token cache and guestyFetch wrapper
+- [ ] 01-03-PLAN.md — scripts/discover-listing.js one-time listing ID discovery
+- [ ] 01-04-PLAN.md — api/availability.js endpoint + vercel.json CORS update
 
 ### Phase 2: Quote + Payment Info
 **Goal**: The frontend can fetch a full line-item price quote and the Stripe connected account ID in a single phase — everything needed to initialize Stripe.js and display a complete price breakdown
@@ -98,7 +104,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. API Foundation | 0/TBD | Not started | - |
+| 1. API Foundation | 0/4 | Not started | - |
 | 2. Quote + Payment Info | 0/TBD | Not started | - |
 | 3. Upsells + Notifications | 0/TBD | Not started | - |
 | 4. Booking Endpoint | 0/TBD | Not started | - |
