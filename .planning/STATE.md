@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Completed 03-02-PLAN.md
-last_updated: "2026-04-06T22:22:55.996Z"
+stopped_at: Completed 03-03-PLAN.md
+last_updated: "2026-04-06T22:23:01.761Z"
 last_activity: 2026-04-06
 progress:
   total_phases: 6
@@ -87,6 +87,7 @@ Recent decisions affecting current work:
 - [Phase 03]: Upsells tests require no fetch mocking — endpoint serves static config from lib/upsells-config.js, no external calls
 - [Phase 03]: UPSELLS array exported as named export (not default) so Phase 4 api/book.js can import alongside other config
 - [Phase 03]: Synchronous handler (not async) since GET /api/upsells has no external calls — purely reads from static config
+- [Phase 03]: Resend SDK uses fetch internally — mock.method(globalThis, fetch) sufficient for test isolation, consistent with Phase 1/2 pattern
 
 ### Pending Todos
 
@@ -99,6 +100,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-06T22:22:44.341Z
-Stopped at: Completed 03-02-PLAN.md
+Last session: 2026-04-06T22:23:01.756Z
+Stopped at: Completed 03-03-PLAN.md
 Resume file: None
