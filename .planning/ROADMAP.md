@@ -12,7 +12,7 @@ Six phases build the checkout system from the ground up. The API layer is comple
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: API Foundation** - Token management, listing discovery, availability endpoint, and CORS/infrastructure wiring
+- [x] **Phase 1: API Foundation** - Token management, listing discovery, availability endpoint, and CORS/infrastructure wiring (completed 2026-04-06)
 - [ ] **Phase 2: Quote + Payment Info** - Price breakdown quote endpoint and Stripe account retrieval (unblocks all frontend work)
 - [ ] **Phase 3: Upsells + Notifications** - Upsell catalog endpoint and Resend email notification to Sebastian
 - [ ] **Phase 4: Booking Endpoint** - Instant reservation confirmation via Guesty BEAPI
@@ -37,7 +37,7 @@ Plans:
 - [x] 01-01-PLAN.md — Test scaffolds + package.json ES module config (Wave 0)
 - [x] 01-02-PLAN.md — lib/guesty.js BEAPI token cache and guestyFetch wrapper
 - [x] 01-03-PLAN.md — scripts/discover-listing.js one-time listing ID discovery
-- [ ] 01-04-PLAN.md — api/availability.js endpoint + vercel.json CORS update
+- [x] 01-04-PLAN.md — api/availability.js endpoint + vercel.json CORS update
 
 ### Phase 2: Quote + Payment Info
 **Goal**: The frontend can fetch a full line-item price quote and the Stripe connected account ID in a single phase — everything needed to initialize Stripe.js and display a complete price breakdown
@@ -104,7 +104,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. API Foundation | 3/4 | In Progress|  |
+| 1. API Foundation | 4/4 | Complete   | 2026-04-06 |
 | 2. Quote + Payment Info | 0/TBD | Not started | - |
 | 3. Upsells + Notifications | 0/TBD | Not started | - |
 | 4. Booking Endpoint | 0/TBD | Not started | - |
