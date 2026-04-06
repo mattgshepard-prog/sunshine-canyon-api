@@ -221,6 +221,45 @@ Do not make direct repo edits outside a GSD workflow unless the user explicitly 
 
 
 
+## Economical Model Routing
+
+This project uses GSD Economical to minimize AI model costs without sacrificing quality.
+
+### Before Each Phase
+
+Check `.planning/ECONOMICAL.md` for the assigned model and effort level, then run:
+- `/model [assigned_model]` to switch models
+- `/effort [assigned_level]` to set thinking depth
+
+### Phase Assignments
+
+| Phase | Name | Tier | Model | Effort |
+|-------|------|------|-------|--------|
+| 1 | API Foundation | 3 | Opus | high |
+| 2 | Quote + Payment Info | 2 | Sonnet | medium |
+| 3 | Upsells + Notifications | 2 | Sonnet | medium |
+| 4 | Booking Endpoint | 3 | Opus | high |
+| 5 | Checkout Modal — Steps 1 & 2 | 2 | Sonnet | medium |
+| 6 | Stripe Elements + End-to-End | 3 | Opus | high |
+
+### Escalation Rule
+
+If a Sonnet executor fails the same task 3 times, escalate:
+1. Stop execution
+2. `/model opus`
+3. `/effort high`
+4. Re-run the failing task
+5. After success, switch back to the assigned model for remaining tasks
+
+### Post-Build Quality Check
+
+After all phases complete, run Opus verification on Sonnet-built phases:
+```
+/model opus
+/effort high
+/gsd:verify-work [phase_number]
+```
+
 <!-- GSD:profile-start -->
 ## Developer Profile
 
