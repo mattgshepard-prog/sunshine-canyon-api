@@ -36,7 +36,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 - [x] 01-01-PLAN.md — Test scaffolds + package.json ES module config (Wave 0)
 - [x] 01-02-PLAN.md — lib/guesty.js BEAPI token cache and guestyFetch wrapper
-- [ ] 01-03-PLAN.md — scripts/discover-listing.js one-time listing ID discovery
+- [x] 01-03-PLAN.md — scripts/discover-listing.js one-time listing ID discovery
 - [ ] 01-04-PLAN.md — api/availability.js endpoint + vercel.json CORS update
 
 ### Phase 2: Quote + Payment Info
@@ -104,7 +104,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. API Foundation | 2/4 | In Progress|  |
+| 1. API Foundation | 3/4 | In Progress|  |
 | 2. Quote + Payment Info | 0/TBD | Not started | - |
 | 3. Upsells + Notifications | 0/TBD | Not started | - |
 | 4. Booking Endpoint | 0/TBD | Not started | - |

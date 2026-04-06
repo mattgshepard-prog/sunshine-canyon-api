@@ -16,8 +16,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Listing Discovery
 
-- [ ] **LIST-01**: One-time listing ID discovery via Guesty `/v1/search` API
-- [ ] **LIST-02**: Listing ID stored as `GUESTY_LISTING_ID` Vercel environment variable
+- [x] **LIST-01**: One-time listing ID discovery via Guesty `/v1/search` API
+- [x] **LIST-02**: Listing ID stored as `GUESTY_LISTING_ID` Vercel environment variable
 
 ### Availability
 
@@ -116,8 +116,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-02 | Phase 1 | Complete |
 | AUTH-03 | Phase 1 | Complete |
 | AUTH-04 | Phase 1 | Complete |
-| LIST-01 | Phase 1 | Pending |
-| LIST-02 | Phase 1 | Pending |
+| LIST-01 | Phase 1 | Complete |
+| LIST-02 | Phase 1 | Complete |
 | AVAIL-01 | Phase 1 | Complete |
 | AVAIL-02 | Phase 1 | Complete |
 | QUOTE-01 | Phase 2 | Pending |
