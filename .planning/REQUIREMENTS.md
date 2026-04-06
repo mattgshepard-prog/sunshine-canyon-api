@@ -9,10 +9,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Authentication & Token Management
 
-- [ ] **AUTH-01**: Server-side OAuth2 token acquisition from Guesty BEAPI (`booking.guesty.com/oauth2/token`)
-- [ ] **AUTH-02**: Token caching with module-level variable (reuse until 5 min before expiry)
-- [ ] **AUTH-03**: Separate token management for BEAPI scope (`booking_engine:api`) vs existing Open API scope
-- [ ] **AUTH-04**: Automatic token refresh on 401 response with single retry
+- [x] **AUTH-01**: Server-side OAuth2 token acquisition from Guesty BEAPI (`booking.guesty.com/oauth2/token`)
+- [x] **AUTH-02**: Token caching with module-level variable (reuse until 5 min before expiry)
+- [x] **AUTH-03**: Separate token management for BEAPI scope (`booking_engine:api`) vs existing Open API scope
+- [x] **AUTH-04**: Automatic token refresh on 401 response with single retry
 
 ### Listing Discovery
 
@@ -21,8 +21,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Availability
 
-- [ ] **AVAIL-01**: Real-time availability check for given check-in/check-out dates and guest count
-- [ ] **AVAIL-02**: Returns availability status and nightly rate from Guesty search endpoint
+- [x] **AVAIL-01**: Real-time availability check for given check-in/check-out dates and guest count
+- [x] **AVAIL-02**: Returns availability status and nightly rate from Guesty search endpoint
 
 ### Quote
 
@@ -72,8 +72,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [ ] **INFRA-01**: CORS headers allowing requests from GitHub Pages domain
 - [ ] **INFRA-02**: Guesty credentials stored as Vercel environment variables (never in frontend)
-- [ ] **INFRA-03**: Input validation on all API routes before passing to Guesty
-- [ ] **INFRA-04**: Rate limit awareness (5 req/s, 275 req/min) with 429 retry logic
+- [x] **INFRA-03**: Input validation on all API routes before passing to Guesty
+- [x] **INFRA-04**: Rate limit awareness (5 req/s, 275 req/min) with 429 retry logic
 
 ## v2 Requirements
 
@@ -112,14 +112,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 1 | Pending |
-| AUTH-02 | Phase 1 | Pending |
-| AUTH-03 | Phase 1 | Pending |
-| AUTH-04 | Phase 1 | Pending |
+| AUTH-01 | Phase 1 | Complete |
+| AUTH-02 | Phase 1 | Complete |
+| AUTH-03 | Phase 1 | Complete |
+| AUTH-04 | Phase 1 | Complete |
 | LIST-01 | Phase 1 | Pending |
 | LIST-02 | Phase 1 | Pending |
-| AVAIL-01 | Phase 1 | Pending |
-| AVAIL-02 | Phase 1 | Pending |
+| AVAIL-01 | Phase 1 | Complete |
+| AVAIL-02 | Phase 1 | Complete |
 | QUOTE-01 | Phase 2 | Pending |
 | QUOTE-02 | Phase 2 | Pending |
 | QUOTE-03 | Phase 2 | Pending |
@@ -148,8 +148,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-14 | Phase 5 | Pending |
 | INFRA-01 | Phase 1 | Pending |
 | INFRA-02 | Phase 1 | Pending |
-| INFRA-03 | Phase 1 | Pending |
-| INFRA-04 | Phase 1 | Pending |
+| INFRA-03 | Phase 1 | Complete |
+| INFRA-04 | Phase 1 | Complete |
 
 **Coverage:**
 - v1 requirements: 38 total
