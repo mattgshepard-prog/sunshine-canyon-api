@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: API Foundation** - Token management, listing discovery, availability endpoint, and CORS/infrastructure wiring (completed 2026-04-06)
 - [x] **Phase 2: Quote + Payment Info** - Price breakdown quote endpoint and Stripe account retrieval (unblocks all frontend work) (completed 2026-04-06)
 - [x] **Phase 3: Upsells + Notifications** - Upsell catalog endpoint and Resend email notification to Sebastian (completed 2026-04-06)
-- [ ] **Phase 4: Booking Endpoint** - Instant reservation confirmation via Guesty BEAPI
+- [x] **Phase 4: Booking Endpoint** - Instant reservation confirmation via Guesty BEAPI (completed 2026-04-06)
 - [ ] **Phase 5: Checkout Modal — Steps 1 & 2** - Branded modal shell, quote display, guest form, upsell add-ons, fallback path
 - [ ] **Phase 6: Stripe Elements + End-to-End** - Card tokenization, payment step, confirmation screen, full booking test
 
@@ -82,7 +82,7 @@ Plans:
 
 Plans:
 - [x] 04-01-PLAN.md — RED test stubs for book endpoint (Wave 1)
-- [ ] 04-02-PLAN.md — api/book.js implementation + GREEN tests (Wave 2)
+- [x] 04-02-PLAN.md — api/book.js implementation + GREEN tests (Wave 2)
 
 ### Phase 5: Checkout Modal — Steps 1 & 2
 **Goal**: Guests can open a branded checkout modal from the existing site, review a full price breakdown, enter their details, and select upsell add-ons — all without a Stripe key, with the fallback redirect active throughout
@@ -121,6 +121,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. API Foundation | 4/4 | Complete   | 2026-04-06 |
 | 2. Quote + Payment Info | 3/3 | Complete   | 2026-04-06 |
 | 3. Upsells + Notifications | 3/3 | Complete   | 2026-04-06 |
-| 4. Booking Endpoint | 1/2 | In Progress|  |
+| 4. Booking Endpoint | 2/2 | Complete   | 2026-04-06 |
 | 5. Checkout Modal — Steps 1 & 2 | 0/TBD | Not started | - |
 | 6. Stripe Elements + End-to-End | 0/TBD | Not started | - |
