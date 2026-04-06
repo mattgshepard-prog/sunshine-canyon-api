@@ -1,15 +1,14 @@
 // Tests for api/availability.js
 // Requirements: AVAIL-01, AVAIL-02, INFRA-03
 // Run: node --test tests/availability.test.js
-// Expected state: RED (api/availability.js does not exist yet — Plan 04 creates it)
+// Expected state: GREEN after Plan 04 creates api/availability.js
 
-import { describe, it } from 'node:test';
+import { describe, it, mock } from 'node:test';
 import assert from 'node:assert/strict';
-
-// Stub: replace when api/availability.js exists
-// import handler from '../api/availability.js';
+import handler from '../api/availability.js';
 
 const FALLBACK_URL = 'https://svpartners.guestybookings.com/en/properties/693366e4e2c2460012d9ed96';
+const BEAPI_TOKEN_URL = 'https://booking.guesty.com/oauth2/token';
 
 // Helper: minimal mock req/res for testing handler directly
 function mockReqRes(query = {}) {
@@ -24,24 +23,74 @@ function mockReqRes(query = {}) {
   return { req: { method: 'GET', headers: {}, query }, res };
 }
 
+// Helper: create a mock Response object
+function mockResponse(status, body = {}) {
+  return {
+    status,
+    ok: status >= 200 && status < 300,
+    headers: {get: () => null},
+    json: async () => body,
+  };
+}
+
+// Helper: token response
+function tokenResp() {
+  return mockResponse(200, {access_token: 'test-token', expires_in: 86400});
+}
+
 describe('Input Validation (api/availability.js)', () => {
   it('INFRA-03: missing checkIn returns 400 with error and fallbackUrl', async () => {
-    // TODO: call handler with { checkOut: '2026-05-10', guests: '2' }, assert 400 + fallbackUrl
-    assert.fail('api/availability.js not yet implemented');
+    const {req, res} = mockReqRes({checkOut: '2026-05-10', guests: '2'});
+    await handler(req, res);
+    assert.equal(res._status, 400);
+    assert.ok(res._body.error);
+    assert.equal(res._body.fallbackUrl, FALLBACK_URL);
   });
 
   it('INFRA-03: checkOut <= checkIn returns 400 with error', async () => {
-    // TODO: call handler with checkOut same as checkIn, assert 400
-    assert.fail('api/availability.js not yet implemented');
+    const {req, res} = mockReqRes({checkIn: '2026-05-10', checkOut: '2026-05-10', guests: '2'});
+    await handler(req, res);
+    assert.equal(res._status, 400);
+    assert.ok(res._body.error.includes('after'));
   });
 
   it('INFRA-03: guests=0 returns 400 with error', async () => {
-    // TODO: call handler with guests=0, assert 400
-    assert.fail('api/availability.js not yet implemented');
+    const {req, res} = mockReqRes({checkIn: '2026-05-01', checkOut: '2026-05-05', guests: '0'});
+    await handler(req, res);
+    assert.equal(res._status, 400);
+    assert.ok(res._body.error);
   });
 
   it('AVAIL-02: valid input returns { available: boolean, listing: object|null }', async () => {
-    // TODO: mock guestyFetch, call handler with valid dates, assert response shape
-    assert.fail('api/availability.js not yet implemented');
+    // Mock globalThis.fetch: token endpoint + search endpoint
+    const mockFetch = mock.fn(async (url) => {
+      if (url === BEAPI_TOKEN_URL) return tokenResp();
+      // BEAPI search call — return one listing result
+      return mockResponse(200, {
+        results: [{
+          id: 'listing-123',
+          title: 'Sunshine Canyon Retreat',
+          nightlyRates: {'2026-05-01': 350},
+        }],
+      });
+    });
+    mock.method(globalThis, 'fetch', mockFetch);
+
+    const {req, res} = mockReqRes({checkIn: '2026-05-01', checkOut: '2026-05-05', guests: '2'});
+    await handler(req, res);
+
+    mock.restoreAll();
+
+    assert.equal(res._status, 200);
+    assert.ok(typeof res._body.available === 'boolean');
+    assert.ok('listing' in res._body);
+    if (res._body.available) {
+      assert.ok(res._body.listing !== null);
+      assert.ok('id' in res._body.listing);
+      assert.ok('title' in res._body.listing);
+      assert.ok('nightlyRate' in res._body.listing);
+    } else {
+      assert.equal(res._body.listing, null);
+    }
   });
 });
