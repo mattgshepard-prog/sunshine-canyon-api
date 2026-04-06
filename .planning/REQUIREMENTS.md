@@ -71,7 +71,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Infrastructure
 
 - [ ] **INFRA-01**: CORS headers allowing requests from GitHub Pages domain
-- [ ] **INFRA-02**: Guesty credentials stored as Vercel environment variables (never in frontend)
+- [x] **INFRA-02**: Guesty credentials stored as Vercel environment variables (never in frontend)
 - [x] **INFRA-03**: Input validation on all API routes before passing to Guesty
 - [x] **INFRA-04**: Rate limit awareness (5 req/s, 275 req/min) with 429 retry logic
 
@@ -147,7 +147,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-13 | Phase 5 | Pending |
 | UI-14 | Phase 5 | Pending |
 | INFRA-01 | Phase 1 | Pending |
-| INFRA-02 | Phase 1 | Pending |
+| INFRA-02 | Phase 1 | Complete |
 | INFRA-03 | Phase 1 | Complete |
 | INFRA-04 | Phase 1 | Complete |
 
