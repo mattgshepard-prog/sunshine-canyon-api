@@ -62,7 +62,12 @@ Plans:
   1. A call to `/api/upsells` returns the catalog with id, name, price, and description for each add-on
   2. Upsell prices can be updated in `lib/upsells-config.js` without redeploying the frontend
   3. When a test booking fires the notification path, Sebastian receives an email at seb@sv.partners via Resend containing guest name, dates, confirmation code, and itemized upsell selections with prices
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — RED test stubs for upsells endpoint and notify module (Wave 1)
+- [ ] 03-02-PLAN.md — lib/upsells-config.js + api/upsells.js + GREEN tests (Wave 2)
+- [ ] 03-03-PLAN.md — lib/notify.js + resend install + GREEN tests (Wave 2)
 
 ### Phase 4: Booking Endpoint
 **Goal**: A guest can confirm an instant-book reservation through `/api/book`, which charges via the Guesty BEAPI using the Stripe PaymentMethod token, notifies Sebastian if upsells were selected, and returns a confirmation code
@@ -111,7 +116,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. API Foundation | 4/4 | Complete   | 2026-04-06 |
 | 2. Quote + Payment Info | 3/3 | Complete   | 2026-04-06 |
-| 3. Upsells + Notifications | 0/TBD | Not started | - |
+| 3. Upsells + Notifications | 0/3 | Not started | - |
 | 4. Booking Endpoint | 0/TBD | Not started | - |
 | 5. Checkout Modal — Steps 1 & 2 | 0/TBD | Not started | - |
 | 6. Stripe Elements + End-to-End | 0/TBD | Not started | - |
