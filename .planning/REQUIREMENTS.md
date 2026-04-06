@@ -112,50 +112,50 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | — | Pending |
-| AUTH-02 | — | Pending |
-| AUTH-03 | — | Pending |
-| AUTH-04 | — | Pending |
-| LIST-01 | — | Pending |
-| LIST-02 | — | Pending |
-| AVAIL-01 | — | Pending |
-| AVAIL-02 | — | Pending |
-| QUOTE-01 | — | Pending |
-| QUOTE-02 | — | Pending |
-| QUOTE-03 | — | Pending |
-| PAY-01 | — | Pending |
-| PAY-02 | — | Pending |
-| BOOK-01 | — | Pending |
-| BOOK-02 | — | Pending |
-| BOOK-03 | — | Pending |
-| UPSELL-01 | — | Pending |
-| UPSELL-02 | — | Pending |
-| EMAIL-01 | — | Pending |
-| EMAIL-02 | — | Pending |
-| UI-01 | — | Pending |
-| UI-02 | — | Pending |
-| UI-03 | — | Pending |
-| UI-04 | — | Pending |
-| UI-05 | — | Pending |
-| UI-06 | — | Pending |
-| UI-07 | — | Pending |
-| UI-08 | — | Pending |
-| UI-09 | — | Pending |
-| UI-10 | — | Pending |
-| UI-11 | — | Pending |
-| UI-12 | — | Pending |
-| UI-13 | — | Pending |
-| UI-14 | — | Pending |
-| INFRA-01 | — | Pending |
-| INFRA-02 | — | Pending |
-| INFRA-03 | — | Pending |
-| INFRA-04 | — | Pending |
+| AUTH-01 | Phase 1 | Pending |
+| AUTH-02 | Phase 1 | Pending |
+| AUTH-03 | Phase 1 | Pending |
+| AUTH-04 | Phase 1 | Pending |
+| LIST-01 | Phase 1 | Pending |
+| LIST-02 | Phase 1 | Pending |
+| AVAIL-01 | Phase 1 | Pending |
+| AVAIL-02 | Phase 1 | Pending |
+| QUOTE-01 | Phase 2 | Pending |
+| QUOTE-02 | Phase 2 | Pending |
+| QUOTE-03 | Phase 2 | Pending |
+| PAY-01 | Phase 2 | Pending |
+| PAY-02 | Phase 2 | Pending |
+| BOOK-01 | Phase 4 | Pending |
+| BOOK-02 | Phase 4 | Pending |
+| BOOK-03 | Phase 4 | Pending |
+| UPSELL-01 | Phase 3 | Pending |
+| UPSELL-02 | Phase 3 | Pending |
+| EMAIL-01 | Phase 3 | Pending |
+| EMAIL-02 | Phase 3 | Pending |
+| UI-01 | Phase 5 | Pending |
+| UI-02 | Phase 5 | Pending |
+| UI-03 | Phase 5 | Pending |
+| UI-04 | Phase 5 | Pending |
+| UI-05 | Phase 5 | Pending |
+| UI-06 | Phase 5 | Pending |
+| UI-07 | Phase 6 | Pending |
+| UI-08 | Phase 6 | Pending |
+| UI-09 | Phase 6 | Pending |
+| UI-10 | Phase 6 | Pending |
+| UI-11 | Phase 5 | Pending |
+| UI-12 | Phase 5 | Pending |
+| UI-13 | Phase 5 | Pending |
+| UI-14 | Phase 5 | Pending |
+| INFRA-01 | Phase 1 | Pending |
+| INFRA-02 | Phase 1 | Pending |
+| INFRA-03 | Phase 1 | Pending |
+| INFRA-04 | Phase 1 | Pending |
 
 **Coverage:**
 - v1 requirements: 38 total
-- Mapped to phases: 0
-- Unmapped: 38 ⚠️
+- Mapped to phases: 38
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-04-06*
-*Last updated: 2026-04-06 after initial definition*
+*Last updated: 2026-04-06 after roadmap creation*
