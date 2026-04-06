@@ -50,7 +50,7 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — RED test stubs for quote and payment-info (Wave 1)
+- [x] 02-01-PLAN.md — RED test stubs for quote and payment-info (Wave 1)
 - [ ] 02-02-PLAN.md — api/quote.js implementation + GREEN tests (Wave 2)
 - [ ] 02-03-PLAN.md — api/payment-info.js implementation + GREEN tests (Wave 2)
 
@@ -110,7 +110,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. API Foundation | 4/4 | Complete   | 2026-04-06 |
-| 2. Quote + Payment Info | 0/3 | Not started | - |
+| 2. Quote + Payment Info | 1/3 | In Progress|  |
 | 3. Upsells + Notifications | 0/TBD | Not started | - |
 | 4. Booking Endpoint | 0/TBD | Not started | - |
 | 5. Checkout Modal — Steps 1 & 2 | 0/TBD | Not started | - |

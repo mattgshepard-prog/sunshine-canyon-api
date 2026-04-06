@@ -26,14 +26,14 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Quote
 
-- [ ] **QUOTE-01**: Create reservation quote with full price breakdown (nightly rates, cleaning, fees, taxes, total)
-- [ ] **QUOTE-02**: Quote includes rate plan details and per-night pricing
-- [ ] **QUOTE-03**: Quote response includes expiry timestamp
+- [x] **QUOTE-01**: Create reservation quote with full price breakdown (nightly rates, cleaning, fees, taxes, total)
+- [x] **QUOTE-02**: Quote includes rate plan details and per-night pricing
+- [x] **QUOTE-03**: Quote response includes expiry timestamp
 
 ### Payment Info
 
-- [ ] **PAY-01**: Retrieve Stripe connected account ID (`acct_xxx`) from Guesty payment provider endpoint
-- [ ] **PAY-02**: Return provider type and account ID to frontend for Stripe.js initialization
+- [x] **PAY-01**: Retrieve Stripe connected account ID (`acct_xxx`) from Guesty payment provider endpoint
+- [x] **PAY-02**: Return provider type and account ID to frontend for Stripe.js initialization
 
 ### Booking
 
@@ -120,11 +120,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | LIST-02 | Phase 1 | Complete |
 | AVAIL-01 | Phase 1 | Complete |
 | AVAIL-02 | Phase 1 | Complete |
-| QUOTE-01 | Phase 2 | Pending |
-| QUOTE-02 | Phase 2 | Pending |
-| QUOTE-03 | Phase 2 | Pending |
-| PAY-01 | Phase 2 | Pending |
-| PAY-02 | Phase 2 | Pending |
+| QUOTE-01 | Phase 2 | Complete |
+| QUOTE-02 | Phase 2 | Complete |
+| QUOTE-03 | Phase 2 | Complete |
+| PAY-01 | Phase 2 | Complete |
+| PAY-02 | Phase 2 | Complete |
 | BOOK-01 | Phase 4 | Pending |
 | BOOK-02 | Phase 4 | Pending |
 | BOOK-03 | Phase 4 | Pending |
