@@ -13,7 +13,7 @@ Six phases build the checkout system from the ground up. The API layer is comple
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: API Foundation** - Token management, listing discovery, availability endpoint, and CORS/infrastructure wiring (completed 2026-04-06)
-- [ ] **Phase 2: Quote + Payment Info** - Price breakdown quote endpoint and Stripe account retrieval (unblocks all frontend work)
+- [x] **Phase 2: Quote + Payment Info** - Price breakdown quote endpoint and Stripe account retrieval (unblocks all frontend work) (completed 2026-04-06)
 - [ ] **Phase 3: Upsells + Notifications** - Upsell catalog endpoint and Resend email notification to Sebastian
 - [ ] **Phase 4: Booking Endpoint** - Instant reservation confirmation via Guesty BEAPI
 - [ ] **Phase 5: Checkout Modal — Steps 1 & 2** - Branded modal shell, quote display, guest form, upsell add-ons, fallback path
@@ -52,7 +52,7 @@ Plans:
 Plans:
 - [x] 02-01-PLAN.md — RED test stubs for quote and payment-info (Wave 1)
 - [x] 02-02-PLAN.md — api/quote.js implementation + GREEN tests (Wave 2)
-- [ ] 02-03-PLAN.md — api/payment-info.js implementation + GREEN tests (Wave 2)
+- [x] 02-03-PLAN.md — api/payment-info.js implementation + GREEN tests (Wave 2)
 
 ### Phase 3: Upsells + Notifications
 **Goal**: The upsell catalog is served from the API and Sebastian receives an email with itemized upsell selections whenever a booking includes them — both independently testable before the booking endpoint exists
@@ -110,7 +110,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. API Foundation | 4/4 | Complete   | 2026-04-06 |
-| 2. Quote + Payment Info | 2/3 | In Progress|  |
+| 2. Quote + Payment Info | 3/3 | Complete   | 2026-04-06 |
 | 3. Upsells + Notifications | 0/TBD | Not started | - |
 | 4. Booking Endpoint | 0/TBD | Not started | - |
 | 5. Checkout Modal — Steps 1 & 2 | 0/TBD | Not started | - |
