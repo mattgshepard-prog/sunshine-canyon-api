@@ -78,7 +78,11 @@ Plans:
   2. The response includes a confirmation code, reservation ID, and booking status that the frontend can display
   3. When the booking request includes upsell selections, Sebastian receives the Resend notification email within the same request lifecycle
   4. A failed booking attempt (invalid token, expired quote) returns a structured error the frontend can present without a generic crash
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — RED test stubs for book endpoint (Wave 1)
+- [ ] 04-02-PLAN.md — api/book.js implementation + GREEN tests (Wave 2)
 
 ### Phase 5: Checkout Modal — Steps 1 & 2
 **Goal**: Guests can open a branded checkout modal from the existing site, review a full price breakdown, enter their details, and select upsell add-ons — all without a Stripe key, with the fallback redirect active throughout
@@ -117,6 +121,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. API Foundation | 4/4 | Complete   | 2026-04-06 |
 | 2. Quote + Payment Info | 3/3 | Complete   | 2026-04-06 |
 | 3. Upsells + Notifications | 3/3 | Complete   | 2026-04-06 |
-| 4. Booking Endpoint | 0/TBD | Not started | - |
+| 4. Booking Endpoint | 0/2 | Not started | - |
 | 5. Checkout Modal — Steps 1 & 2 | 0/TBD | Not started | - |
 | 6. Stripe Elements + End-to-End | 0/TBD | Not started | - |
