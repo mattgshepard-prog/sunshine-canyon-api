@@ -12,7 +12,7 @@ Six phases build the checkout system from the ground up. The API layer is comple
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [x] **Phase 1: API Foundation** - Token management, listing discovery, availability endpoint, and CORS/infrastructure wiring (completed 2026-04-06)
+- [x] **Phase 1: API Foundation** - Token management, listing discovery, availability endpoint, and CORS/infrastructure wiring (completed 2026-04-06)
 - [ ] **Phase 2: Quote + Payment Info** - Price breakdown quote endpoint and Stripe account retrieval (unblocks all frontend work)
 - [ ] **Phase 3: Upsells + Notifications** - Upsell catalog endpoint and Resend email notification to Sebastian
 - [ ] **Phase 4: Booking Endpoint** - Instant reservation confirmation via Guesty BEAPI
@@ -47,7 +47,12 @@ Plans:
   1. A call to `/api/quote` returns a quote with nightly rate breakdown, cleaning fee, taxes, total, and expiry timestamp
   2. A call to `/api/payment-info` returns the Stripe connected account ID (`acct_xxx`) retrieved from Guesty and the publishable key from the environment variable
   3. When `STRIPE_PUBLISHABLE_KEY` is absent from the environment, `/api/payment-info` returns a fallback URL pointing to the Guesty booking page instead of an error
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — RED test stubs for quote and payment-info (Wave 1)
+- [ ] 02-02-PLAN.md — api/quote.js implementation + GREEN tests (Wave 2)
+- [ ] 02-03-PLAN.md — api/payment-info.js implementation + GREEN tests (Wave 2)
 
 ### Phase 3: Upsells + Notifications
 **Goal**: The upsell catalog is served from the API and Sebastian receives an email with itemized upsell selections whenever a booking includes them — both independently testable before the booking endpoint exists
@@ -105,7 +110,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. API Foundation | 4/4 | Complete   | 2026-04-06 |
-| 2. Quote + Payment Info | 0/TBD | Not started | - |
+| 2. Quote + Payment Info | 0/3 | Not started | - |
 | 3. Upsells + Notifications | 0/TBD | Not started | - |
 | 4. Booking Endpoint | 0/TBD | Not started | - |
 | 5. Checkout Modal — Steps 1 & 2 | 0/TBD | Not started | - |
