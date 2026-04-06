@@ -1,1 +1,6 @@
-{"name":"sunshine-canyon-api","version":"1.0.0","private":true}
+{
+  "name": "sunshine-canyon-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module"
+}
