@@ -43,13 +43,13 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Upsells
 
-- [ ] **UPSELL-01**: Serve upsell catalog from API (id, name, price, description) — server-side config
-- [ ] **UPSELL-02**: Upsell pricing updateable without frontend redeployment
+- [x] **UPSELL-01**: Serve upsell catalog from API (id, name, price, description) — server-side config
+- [x] **UPSELL-02**: Upsell pricing updateable without frontend redeployment
 
 ### Email Notifications
 
-- [ ] **EMAIL-01**: Send upsell notification email to Sebastian (seb@sv.partners) via Resend on booking with upsells
-- [ ] **EMAIL-02**: Email includes guest name, dates, confirmation code, and itemized upsell selections with prices
+- [x] **EMAIL-01**: Send upsell notification email to Sebastian (seb@sv.partners) via Resend on booking with upsells
+- [x] **EMAIL-02**: Email includes guest name, dates, confirmation code, and itemized upsell selections with prices
 
 ### Frontend — Checkout Flow
 
@@ -128,10 +128,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BOOK-01 | Phase 4 | Pending |
 | BOOK-02 | Phase 4 | Pending |
 | BOOK-03 | Phase 4 | Pending |
-| UPSELL-01 | Phase 3 | Pending |
-| UPSELL-02 | Phase 3 | Pending |
-| EMAIL-01 | Phase 3 | Pending |
-| EMAIL-02 | Phase 3 | Pending |
+| UPSELL-01 | Phase 3 | Complete |
+| UPSELL-02 | Phase 3 | Complete |
+| EMAIL-01 | Phase 3 | Complete |
+| EMAIL-02 | Phase 3 | Complete |
 | UI-01 | Phase 5 | Pending |
 | UI-02 | Phase 5 | Pending |
 | UI-03 | Phase 5 | Pending |
