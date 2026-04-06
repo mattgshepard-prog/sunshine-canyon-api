@@ -37,9 +37,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Booking
 
-- [ ] **BOOK-01**: Confirm instant book reservation via Guesty BEAPI with `ccToken` (pm_xxx)
-- [ ] **BOOK-02**: Return confirmation code, reservation ID, and booking status to frontend
-- [ ] **BOOK-03**: Include upsell selections in booking request context
+- [x] **BOOK-01**: Confirm instant book reservation via Guesty BEAPI with `ccToken` (pm_xxx)
+- [x] **BOOK-02**: Return confirmation code, reservation ID, and booking status to frontend
+- [x] **BOOK-03**: Include upsell selections in booking request context
 
 ### Upsells
 
@@ -125,9 +125,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | QUOTE-03 | Phase 2 | Complete |
 | PAY-01 | Phase 2 | Complete |
 | PAY-02 | Phase 2 | Complete |
-| BOOK-01 | Phase 4 | Pending |
-| BOOK-02 | Phase 4 | Pending |
-| BOOK-03 | Phase 4 | Pending |
+| BOOK-01 | Phase 4 | Complete |
+| BOOK-02 | Phase 4 | Complete |
+| BOOK-03 | Phase 4 | Complete |
 | UPSELL-01 | Phase 3 | Complete |
 | UPSELL-02 | Phase 3 | Complete |
 | EMAIL-01 | Phase 3 | Complete |

@@ -81,7 +81,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — RED test stubs for book endpoint (Wave 1)
+- [x] 04-01-PLAN.md — RED test stubs for book endpoint (Wave 1)
 - [ ] 04-02-PLAN.md — api/book.js implementation + GREEN tests (Wave 2)
 
 ### Phase 5: Checkout Modal — Steps 1 & 2
@@ -121,6 +121,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. API Foundation | 4/4 | Complete   | 2026-04-06 |
 | 2. Quote + Payment Info | 3/3 | Complete   | 2026-04-06 |
 | 3. Upsells + Notifications | 3/3 | Complete   | 2026-04-06 |
-| 4. Booking Endpoint | 0/2 | Not started | - |
+| 4. Booking Endpoint | 1/2 | In Progress|  |
 | 5. Checkout Modal — Steps 1 & 2 | 0/TBD | Not started | - |
 | 6. Stripe Elements + End-to-End | 0/TBD | Not started | - |
