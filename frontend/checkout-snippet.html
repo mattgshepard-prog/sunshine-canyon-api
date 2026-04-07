@@ -2,6 +2,7 @@
   <link rel="stylesheet" href="css/checkout.css">
 -->
 <!-- ADD BEFORE </body> of index.html (after this snippet):
+  <script src="https://js.stripe.com/v3/"></script>
   <script src="js/checkout.js"></script>
 -->
 
@@ -106,20 +107,68 @@
     </div>
   </div>
 
-  <!-- Step 3 placeholder (Phase 6 — Stripe Elements) -->
+  <!-- Step 3: Stripe Elements Payment -->
   <div id="checkout-step-3" class="checkout-step" hidden>
-    <!-- Fallback shown here when stripePublishableKey is null (UI-11) -->
+    <!-- Fallback shown when stripePublishableKey is null (UI-11) -->
     <div id="checkout-payment-fallback" class="checkout-payment-fallback" hidden>
       <p class="checkout-fallback-message">Direct booking payments are being set up. In the meantime, complete your booking through our partner portal.</p>
       <a id="btn-fallback-portal" class="checkout-btn checkout-btn-primary" href="https://svpartners.guestybookings.com/en/properties/693366e4e2c2460012d9ed96" target="_blank" rel="noopener">Complete Booking &rarr;</a>
     </div>
-    <!-- Stripe card element injected here in Phase 6 -->
-    <div id="stripe-card-element" hidden></div>
+
+    <!-- Stripe Elements form (shown when stripePublishableKey is non-null) -->
+    <div id="stripe-elements-form" hidden>
+      <div class="co-charge-notice" id="co-charge-notice">
+        <!-- JS populates: "You will be charged $50 today. Remaining $X charged 14 days before check-in." -->
+      </div>
+
+      <div class="co-card-label">Card Details</div>
+      <div id="card-element" class="co-card-element">
+        <!-- Stripe.js mounts CardElement here -->
+      </div>
+      <div id="card-errors" class="co-card-errors" role="alert" aria-live="polite" hidden></div>
+
+      <div class="co-policy-row">
+        <input type="checkbox" id="co-policy-checkbox" class="co-policy-checkbox">
+        <label for="co-policy-checkbox" class="co-policy-label">
+          I agree to the cancellation policy: free cancellation up to 14 days before check-in, 50% refund up to 7 days, non-refundable after that.
+        </label>
+      </div>
+
+      <div class="checkout-actions">
+        <button type="button" id="btn-back-to-step2" class="checkout-btn checkout-btn-secondary">Back</button>
+        <button type="button" id="co-confirm-btn" class="checkout-btn checkout-btn-primary" disabled>Confirm Booking</button>
+      </div>
+    </div>
   </div>
 
-  <!-- Step 4 placeholder (Phase 6 — Confirmation) -->
+  <!-- Step 4: Confirmation Screen -->
   <div id="checkout-step-4" class="checkout-step" hidden>
-    <!-- JS populates confirmation in Phase 6 -->
+    <div class="co-confirmation">
+      <div class="co-confirmation-icon" aria-hidden="true">&#10003;</div>
+      <h3 class="co-confirmation-heading">Booking Confirmed!</h3>
+      <p class="co-confirmation-email-notice" id="co-confirmation-email-notice">
+        <!-- JS populates: "A confirmation email has been sent to [email]" -->
+      </p>
+
+      <div class="co-confirmation-code-block">
+        <span class="co-confirmation-code-label">Confirmation Code</span>
+        <span class="co-confirmation-code" id="co-confirmation-code">—</span>
+      </div>
+
+      <div class="co-confirmation-details" id="co-confirmation-details">
+        <!-- JS populates: property name, dates, guest name -->
+      </div>
+
+      <div class="co-confirmation-upsells" id="co-confirmation-upsells" hidden>
+        <!-- JS populates: upsell selections with prices -->
+      </div>
+
+      <div class="co-confirmation-total" id="co-confirmation-total">
+        <!-- JS populates: total amount -->
+      </div>
+
+      <button type="button" id="btn-confirmation-done" class="checkout-btn checkout-btn-primary" style="margin-top:24px">Done</button>
+    </div>
   </div>
 
 </div>
