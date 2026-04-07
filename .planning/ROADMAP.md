@@ -95,8 +95,12 @@ Plans:
   4. Step 2 displays upsell add-ons with checkboxes and a running total that updates as items are selected or deselected
   5. When the Stripe publishable key is absent, the modal presents a clear fallback that redirects to the Guesty booking page rather than showing a broken payment form
   6. The modal is fully usable on iPhone (large tap targets, no scroll-off, readable text) and API call states show loading spinners with disabled buttons during in-flight requests
-**Plans**: TBD
+**Plans**: 2 plans
 **UI hint**: yes
+
+Plans:
+- [ ] 05-01-PLAN.md — Checkout drawer HTML snippet + CSS (Wave 1)
+- [ ] 05-02-PLAN.md — checkout.js state machine: open/close, quote, Step 2, upsells, fallback (Wave 2)
 
 ### Phase 6: Stripe Elements + End-to-End
 **Goal**: Guests can enter card details in a PCI-compliant Stripe Elements form, tokenize against the connected account, confirm their booking, and land on a confirmation screen with their booking code — validated end-to-end in the Guesty dashboard
@@ -122,5 +126,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2. Quote + Payment Info | 3/3 | Complete   | 2026-04-06 |
 | 3. Upsells + Notifications | 3/3 | Complete   | 2026-04-06 |
 | 4. Booking Endpoint | 2/2 | Complete   | 2026-04-06 |
-| 5. Checkout Modal — Steps 1 & 2 | 0/TBD | Not started | - |
+| 5. Checkout Modal — Steps 1 & 2 | 0/2 | Not started | - |
 | 6. Stripe Elements + End-to-End | 0/TBD | Not started | - |
