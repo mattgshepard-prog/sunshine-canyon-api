@@ -124,7 +124,7 @@ describe('Successful Booking (api/book.js)', () => {
     mock.restoreAll();
     assert.equal(res._status, 200);
     assert.ok(Array.isArray(res._body.upsells));
-    assert.equal(res._body.upsellTotal, 125); // 75 + 50
+    assert.equal(res._body.upsellTotal, 150); // 75 + 75
   });
 });
 

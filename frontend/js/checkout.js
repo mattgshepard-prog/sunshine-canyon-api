@@ -468,7 +468,7 @@
       var pmToken = result.paymentMethod.id;
 
       var bookBody = JSON.stringify({
-        quoteId: state.quote._id,
+        quoteId: state.quote.quoteId,
         ratePlanId: state.selectedRatePlan.ratePlanId,
         ccToken: pmToken,
         guest: state.guest,

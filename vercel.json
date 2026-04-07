@@ -9,11 +9,11 @@
         },
         {
           "key": "Access-Control-Allow-Methods",
-          "value": "GET, OPTIONS"
+          "value": "GET, POST, OPTIONS"
         },
         {
-          "key": "Cache-Control",
-          "value": "public, s-maxage=3600, stale-while-revalidate=7200"
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type"
         }
       ]
     }
