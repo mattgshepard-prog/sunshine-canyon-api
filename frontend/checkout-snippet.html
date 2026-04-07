@@ -1,0 +1,126 @@
+<!-- ADD TO <head> of index.html:
+  <link rel="stylesheet" href="css/checkout.css">
+-->
+<!-- ADD BEFORE </body> of index.html (after this snippet):
+  <script src="js/checkout.js"></script>
+-->
+
+<!-- CHECKOUT DRAWER: paste before </body> in index.html -->
+
+<!-- Dimmed overlay — click to close -->
+<div id="checkout-overlay" class="checkout-overlay" aria-hidden="true"></div>
+
+<!-- Drawer shell -->
+<div id="checkout-drawer" class="checkout-drawer" role="dialog" aria-modal="true" aria-label="Book your stay">
+
+  <!-- Header (persists across all steps) -->
+  <div class="checkout-header">
+    <div class="checkout-header-left">
+      <span class="checkout-step-indicator" id="checkout-step-indicator">Step 1 of 2</span>
+      <h2 class="checkout-title" id="checkout-title">Review Your Stay</h2>
+    </div>
+    <button id="checkout-close-btn" class="checkout-close-btn" aria-label="Close booking">&times;</button>
+  </div>
+
+  <!-- Loading spinner overlay (covers drawer content during API calls) -->
+  <div id="checkout-spinner" class="checkout-spinner-overlay" aria-hidden="true">
+    <div class="checkout-spinner"></div>
+    <p class="checkout-spinner-text">Loading...</p>
+  </div>
+
+  <!-- Error banner (shown when API call fails) -->
+  <div id="checkout-error" class="checkout-error-banner" role="alert" aria-live="polite" hidden>
+    <span id="checkout-error-msg"></span>
+    <a id="checkout-error-fallback" class="checkout-fallback-link" href="https://svpartners.guestybookings.com/en/properties/693366e4e2c2460012d9ed96" target="_blank" rel="noopener">Book via partner portal &rarr;</a>
+  </div>
+
+  <!-- Step 1: Quote Display -->
+  <div id="checkout-step-1" class="checkout-step" hidden>
+    <div class="checkout-quote-summary">
+      <div id="quote-nights-breakdown" class="quote-nights-breakdown">
+        <!-- JS populates: per-night rows -->
+      </div>
+      <div class="quote-line-items" id="quote-line-items">
+        <!-- JS populates: cleaning, taxes, total -->
+      </div>
+    </div>
+
+    <div class="checkout-deposit-notice">
+      <p id="checkout-deposit-text">$50 deposit today. Remaining <span id="quote-remaining-balance"></span> charged 14 days before check-in.</p>
+    </div>
+
+    <div class="checkout-policy">
+      <h3 class="checkout-section-title">Cancellation Policy</h3>
+      <p class="checkout-policy-text">Free cancellation up to 14 days before check-in. 50% refund up to 7 days before check-in. Non-refundable after that.</p>
+    </div>
+
+    <div class="checkout-actions single">
+      <button id="btn-continue-to-step2" class="checkout-btn checkout-btn-primary" disabled>Continue to Book</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Guest Details + Upsells -->
+  <div id="checkout-step-2" class="checkout-step" hidden>
+    <form id="checkout-guest-form" novalidate>
+      <h3 class="checkout-section-title">Your Details</h3>
+      <div class="checkout-form-row">
+        <div class="checkout-field">
+          <label for="field-first-name">First Name</label>
+          <input type="text" id="field-first-name" name="firstName" autocomplete="given-name" required minlength="1">
+          <span class="checkout-field-error" id="err-first-name" hidden></span>
+        </div>
+        <div class="checkout-field">
+          <label for="field-last-name">Last Name</label>
+          <input type="text" id="field-last-name" name="lastName" autocomplete="family-name" required minlength="1">
+          <span class="checkout-field-error" id="err-last-name" hidden></span>
+        </div>
+      </div>
+      <div class="checkout-form-row">
+        <div class="checkout-field">
+          <label for="field-email">Email</label>
+          <input type="email" id="field-email" name="email" autocomplete="email" required>
+          <span class="checkout-field-error" id="err-email" hidden></span>
+        </div>
+        <div class="checkout-field">
+          <label for="field-phone">Phone</label>
+          <input type="tel" id="field-phone" name="phone" autocomplete="tel" placeholder="+1 (303) 555-1234" required>
+          <span class="checkout-field-error" id="err-phone" hidden></span>
+        </div>
+      </div>
+    </form>
+
+    <div class="checkout-upsells" id="checkout-upsells">
+      <h3 class="checkout-section-title">Add-Ons (Optional)</h3>
+      <div id="upsell-list" class="upsell-list">
+        <!-- JS populates from /api/upsells -->
+      </div>
+      <div class="upsell-total-row" id="upsell-total-row" hidden>
+        <span>Selected add-ons:</span>
+        <span id="upsell-total-amount" class="upsell-total-amount">$0</span>
+      </div>
+    </div>
+
+    <div class="checkout-actions">
+      <button type="button" id="btn-back-to-step1" class="checkout-btn checkout-btn-secondary">Back</button>
+      <button type="submit" form="checkout-guest-form" id="btn-continue-to-payment" class="checkout-btn checkout-btn-primary">Continue to Payment</button>
+    </div>
+  </div>
+
+  <!-- Step 3 placeholder (Phase 6 — Stripe Elements) -->
+  <div id="checkout-step-3" class="checkout-step" hidden>
+    <!-- Fallback shown here when stripePublishableKey is null (UI-11) -->
+    <div id="checkout-payment-fallback" class="checkout-payment-fallback" hidden>
+      <p class="checkout-fallback-message">Direct booking payments are being set up. In the meantime, complete your booking through our partner portal.</p>
+      <a id="btn-fallback-portal" class="checkout-btn checkout-btn-primary" href="https://svpartners.guestybookings.com/en/properties/693366e4e2c2460012d9ed96" target="_blank" rel="noopener">Complete Booking &rarr;</a>
+    </div>
+    <!-- Stripe card element injected here in Phase 6 -->
+    <div id="stripe-card-element" hidden></div>
+  </div>
+
+  <!-- Step 4 placeholder (Phase 6 — Confirmation) -->
+  <div id="checkout-step-4" class="checkout-step" hidden>
+    <!-- JS populates confirmation in Phase 6 -->
+  </div>
+
+</div>
+<!-- END CHECKOUT DRAWER -->
