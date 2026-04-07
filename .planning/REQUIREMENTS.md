@@ -53,10 +53,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Frontend — Checkout Flow
 
-- [ ] **UI-01**: Checkout modal/drawer opens from "Book Direct" buttons on existing site
-- [ ] **UI-02**: Step 1 — Quote display with full price breakdown (nightly rates, cleaning, taxes, total)
-- [ ] **UI-03**: Step 1 — Deposit schedule display ("$50 today, remainder 14 days before check-in")
-- [ ] **UI-04**: Step 1 — Cancellation policy text display
+- [x] **UI-01**: Checkout modal/drawer opens from "Book Direct" buttons on existing site
+- [x] **UI-02**: Step 1 — Quote display with full price breakdown (nightly rates, cleaning, taxes, total)
+- [x] **UI-03**: Step 1 — Deposit schedule display ("$50 today, remainder 14 days before check-in")
+- [x] **UI-04**: Step 1 — Cancellation policy text display
 - [ ] **UI-05**: Step 2 — Guest details form (first name, last name, email, phone) with validation
 - [ ] **UI-06**: Step 2 — Upsell add-ons section with checkboxes and running total
 - [ ] **UI-07**: Step 3 — Stripe Elements card input (Card Number, Expiry, CVC)
@@ -64,9 +64,9 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **UI-09**: Step 3 — Cancellation policy agreement checkbox (required before confirm)
 - [ ] **UI-10**: Step 4 — Confirmation screen with booking code, summary, and upsell confirmation
 - [ ] **UI-11**: Graceful fallback to Guesty booking page when Stripe publishable key unavailable
-- [ ] **UI-12**: Loading/processing states during API calls (spinners, disabled buttons)
+- [x] **UI-12**: Loading/processing states during API calls (spinners, disabled buttons)
 - [ ] **UI-13**: Error handling with user-friendly messages (payment declined, dates unavailable, quote expired)
-- [ ] **UI-14**: Mobile-responsive layout (Sebastian tests on iPhone)
+- [x] **UI-14**: Mobile-responsive layout (Sebastian tests on iPhone)
 
 ### Infrastructure
 
@@ -132,10 +132,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UPSELL-02 | Phase 3 | Complete |
 | EMAIL-01 | Phase 3 | Complete |
 | EMAIL-02 | Phase 3 | Complete |
-| UI-01 | Phase 5 | Pending |
-| UI-02 | Phase 5 | Pending |
-| UI-03 | Phase 5 | Pending |
-| UI-04 | Phase 5 | Pending |
+| UI-01 | Phase 5 | Complete |
+| UI-02 | Phase 5 | Complete |
+| UI-03 | Phase 5 | Complete |
+| UI-04 | Phase 5 | Complete |
 | UI-05 | Phase 5 | Pending |
 | UI-06 | Phase 5 | Pending |
 | UI-07 | Phase 6 | Pending |
@@ -143,9 +143,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-09 | Phase 6 | Pending |
 | UI-10 | Phase 6 | Pending |
 | UI-11 | Phase 5 | Pending |
-| UI-12 | Phase 5 | Pending |
+| UI-12 | Phase 5 | Complete |
 | UI-13 | Phase 5 | Pending |
-| UI-14 | Phase 5 | Pending |
+| UI-14 | Phase 5 | Complete |
 | INFRA-01 | Phase 1 | Complete |
 | INFRA-02 | Phase 1 | Complete |
 | INFRA-03 | Phase 1 | Complete |

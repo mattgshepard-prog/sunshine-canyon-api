@@ -99,7 +99,7 @@ Plans:
 **UI hint**: yes
 
 Plans:
-- [ ] 05-01-PLAN.md — Checkout drawer HTML snippet + CSS (Wave 1)
+- [x] 05-01-PLAN.md — Checkout drawer HTML snippet + CSS (Wave 1)
 - [ ] 05-02-PLAN.md — checkout.js state machine: open/close, quote, Step 2, upsells, fallback (Wave 2)
 
 ### Phase 6: Stripe Elements + End-to-End
@@ -126,5 +126,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2. Quote + Payment Info | 3/3 | Complete   | 2026-04-06 |
 | 3. Upsells + Notifications | 3/3 | Complete   | 2026-04-06 |
 | 4. Booking Endpoint | 2/2 | Complete   | 2026-04-06 |
-| 5. Checkout Modal — Steps 1 & 2 | 0/2 | Not started | - |
+| 5. Checkout Modal — Steps 1 & 2 | 1/2 | In Progress|  |
 | 6. Stripe Elements + End-to-End | 0/TBD | Not started | - |
