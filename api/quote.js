@@ -1,11 +1,11 @@
 // api/quote.js
-// POST /api/quote
+// POST /api/quote — uses Open API (same creds as calendar)
 // Requirements: QUOTE-01, QUOTE-02, QUOTE-03
 
 import {guestyFetch} from '../lib/guesty.js';
 
 const FALLBACK_URL = 'https://svpartners.guestybookings.com/en/properties/693366e4e2c2460012d9ed96';
-const QUOTES_URL = 'https://booking.guesty.com/api/reservations/quotes';
+const LISTING_ID = '693366e4e2c2460012d9ed96';
 const ALLOWED_ORIGINS = [
   'https://mattgshepard-prog.github.io',
   'http://localhost:3000',
@@ -27,7 +27,7 @@ export default async function handler(req, res) {
     return res.status(405).json({error: 'Method not allowed', fallbackUrl: FALLBACK_URL});
   }
 
-  const {checkIn, checkOut, guests, guest} = req.body || {};
+  const {checkIn, checkOut, guests} = req.body || {};
 
   if (!checkIn || !checkOut) {
     return res.status(400).json({error: 'checkIn and checkOut are required', fallbackUrl: FALLBACK_URL});
@@ -44,34 +44,60 @@ export default async function handler(req, res) {
   if (!guests || isNaN(guestCount) || guestCount < 1) {
     return res.status(400).json({error: 'guests must be a positive integer', fallbackUrl: FALLBACK_URL});
   }
-  if (!guest) {
-    return res.status(400).json({error: 'guest object is required', fallbackUrl: FALLBACK_URL});
-  }
-  const {firstName, lastName, email, phone} = guest;
-  if (!firstName || !lastName || !email || !phone) {
-    return res.status(400).json({error: 'guest must include firstName, lastName, email, and phone', fallbackUrl: FALLBACK_URL});
-  }
+
+  const listingId = process.env.GUESTY_LISTING_ID || LISTING_ID;
 
   try {
-    const resp = await guestyFetch(QUOTES_URL, {
+    const resp = await guestyFetch('https://open-api.guesty.com/v1/quotes', {
       method: 'POST',
       body: JSON.stringify({
+        listingId,
         checkInDateLocalized: checkIn,
         checkOutDateLocalized: checkOut,
-        listingId: process.env.GUESTY_LISTING_ID,
         guestsCount: guestCount,
-        guest: {firstName, lastName, email, phone},
+        source: 'OAPI',
+        ignoreTerms: false,
+        ignoreCalendar: false,
+        ignoreBlocks: false,
       }),
     });
     if (!resp.ok) {
-      console.error('Guesty quote error:', resp.status);
+      const errBody = await resp.text().catch(() => '');
+      console.error('Guesty quote error:', resp.status, errBody);
+      if (resp.status === 400 || resp.status === 422) {
+        return res.status(400).json({error: 'These dates are not available', fallbackUrl: FALLBACK_URL});
+      }
       return res.status(500).json({error: 'Failed to create quote', fallbackUrl: FALLBACK_URL});
     }
     const data = await resp.json();
+    
+    // Extract rate plans from the response
+    const ratePlans = (data.rates?.ratePlans || []).map(rp => {
+      const days = rp.days || [];
+      const nightlyTotal = days.reduce((sum, d) => sum + (d.price || 0), 0);
+      const fees = rp.fees || [];
+      const taxes = rp.taxes || [];
+      const feeTotal = fees.reduce((sum, f) => sum + (f.amount || 0), 0);
+      const taxTotal = taxes.reduce((sum, t) => sum + (t.amount || 0), 0);
+      return {
+        ratePlanId: rp.ratePlan?.id || rp.id || null,
+        name: rp.ratePlan?.name || 'Standard',
+        days: days.map(d => ({date: d.date, price: d.price, currency: d.currency || 'USD'})),
+        fees,
+        taxes,
+        totals: {
+          nights: nightlyTotal,
+          fees: feeTotal,
+          taxes: taxTotal,
+          total: nightlyTotal + feeTotal + taxTotal,
+        },
+      };
+    });
+
     return res.status(200).json({
-      quoteId: data._id || data.quoteId,
+      quoteId: data._id,
       expiresAt: data.expiresAt,
-      ratePlans: data.ratePlans || [],
+      ratePlans,
     });
   } catch (err) {
     console.error('Quote error:', err);

@@ -1,5 +1,5 @@
 // api/book.js
-// POST /api/book
+// POST /api/book — uses Open API to create reservation from quote
 // Requirements: BOOK-01, BOOK-02, BOOK-03
 
 import {guestyFetch} from '../lib/guesty.js';
@@ -7,7 +7,6 @@ import {UPSELLS} from '../lib/upsells-config.js';
 import {sendUpsellNotification} from '../lib/notify.js';
 
 const FALLBACK_URL = 'https://svpartners.guestybookings.com/en/properties/693366e4e2c2460012d9ed96';
-const INSTANT_URL = (quoteId) => `https://booking.guesty.com/api/reservations/quotes/${quoteId}/instant`;
 const ALLOWED_ORIGINS = [
   'https://mattgshepard-prog.github.io',
   'http://localhost:3000',
@@ -34,12 +33,6 @@ export default async function handler(req, res) {
   if (!quoteId) {
     return res.status(400).json({error: 'quoteId is required', fallbackUrl: FALLBACK_URL});
   }
-  if (!ccToken) {
-    return res.status(400).json({error: 'ccToken is required', fallbackUrl: FALLBACK_URL});
-  }
-  if (!ccToken.startsWith('pm_')) {
-    return res.status(400).json({error: 'ccToken must start with pm_', fallbackUrl: FALLBACK_URL});
-  }
   if (!checkIn || !checkOut) {
     return res.status(400).json({error: 'checkIn and checkOut are required', fallbackUrl: FALLBACK_URL});
   }
@@ -61,19 +54,30 @@ export default async function handler(req, res) {
   const enrichedUpsells = upsellIds.map(id => UPSELLS.find(u => u.id === id));
   const upsellTotal = enrichedUpsells.reduce((sum, u) => sum + u.price, 0);
 
-  const body = {ccToken, guest: {firstName, lastName, email, phone}};
+  // Build reservation body for Open API
+  const body = {
+    quoteId,
+    status: 'confirmed',
+    guest: {firstName, lastName, email, phone},
+  };
   if (ratePlanId) body.ratePlanId = ratePlanId;
+  // Only include ccToken if provided (Stripe token for payment)
+  if (ccToken) body.ccToken = ccToken;
 
   try {
-    const resp = await guestyFetch(INSTANT_URL(quoteId), {method: 'POST', body: JSON.stringify(body)});
+    const resp = await guestyFetch('https://open-api.guesty.com/v1/reservations', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
     if (!resp.ok) {
+      const errBody = await resp.text().catch(() => '');
+      console.error('Guesty reservation error:', resp.status, errBody);
       if (resp.status === 410) {
         return res.status(410).json({error: 'Quote has expired', code: 'QUOTE_EXPIRED', fallbackUrl: FALLBACK_URL});
       }
       if (resp.status === 402 || resp.status === 422) {
-        return res.status(402).json({error: 'Payment declined', code: 'PAYMENT_DECLINED', fallbackUrl: FALLBACK_URL});
+        return res.status(402).json({error: 'Payment declined or validation error', code: 'PAYMENT_DECLINED', fallbackUrl: FALLBACK_URL});
       }
-      console.error('Guesty instant-book error:', resp.status);
       return res.status(500).json({error: 'Booking failed', code: 'BOOKING_FAILED', fallbackUrl: FALLBACK_URL});
     }
     const data = await resp.json();
