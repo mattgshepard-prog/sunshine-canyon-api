@@ -112,8 +112,12 @@ Plans:
   3. The cancellation policy agreement checkbox is required before the confirm button activates
   4. Step 4 displays the booking confirmation code, reservation summary, and upsell selections from the API response
   5. A full end-to-end test booking appears as a confirmed reservation in the Guesty dashboard with the correct guest details
-**Plans**: TBD
+**Plans**: 2 plans
 **UI hint**: yes
+
+Plans:
+- [ ] 06-01-PLAN.md — Stripe Elements Step 3 (card form, PaymentMethod, /api/book) + Step 4 (confirmation screen) in checkout.js (Wave 1)
+- [ ] 06-02-PLAN.md — End-to-end human verification checkpoint (Wave 2)
 
 ## Progress
 
@@ -127,4 +131,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. Upsells + Notifications | 3/3 | Complete   | 2026-04-06 |
 | 4. Booking Endpoint | 2/2 | Complete   | 2026-04-06 |
 | 5. Checkout Modal — Steps 1 & 2 | 1/2 | In Progress|  |
-| 6. Stripe Elements + End-to-End | 0/TBD | Not started | - |
+| 6. Stripe Elements + End-to-End | 0/2 | Not started | - |
