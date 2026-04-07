@@ -522,3 +522,189 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ============================================================
+   Step 3 — Stripe Elements card form
+   ============================================================ */
+
+.co-charge-notice {
+  background: var(--co-surface);
+  border-left: 3px solid var(--co-accent);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: var(--co-text);
+  line-height: 1.5;
+}
+
+.co-card-label {
+  font-size: 13px;
+  color: var(--co-text-secondary);
+  font-weight: 500;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.co-card-element {
+  background: var(--co-surface);
+  border: 1px solid var(--co-border);
+  border-radius: 8px;
+  padding: 14px;
+  min-height: 44px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  margin-bottom: 8px;
+}
+
+.co-card-element.StripeElement--focus {
+  border-color: var(--co-accent);
+  box-shadow: 0 0 0 2px rgba(201, 169, 110, 0.2);
+}
+
+.co-card-element.StripeElement--invalid {
+  border-color: var(--co-error);
+}
+
+.co-card-errors {
+  font-size: 13px;
+  color: var(--co-error);
+  min-height: 20px;
+  margin-bottom: 16px;
+}
+
+.co-policy-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 20px 0;
+  padding: 14px;
+  background: var(--co-surface);
+  border-radius: 8px;
+  border: 1px solid var(--co-border);
+}
+
+.co-policy-checkbox {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+  cursor: pointer;
+  accent-color: var(--co-accent);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.co-policy-label {
+  font-size: 13px;
+  color: var(--co-text-secondary);
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+/* ============================================================
+   Step 4 — Confirmation screen
+   ============================================================ */
+
+.co-confirmation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: 8px;
+}
+
+.co-confirmation-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(126, 184, 126, 0.15);
+  border: 2px solid var(--co-success);
+  color: var(--co-success);
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.co-confirmation-heading {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--co-text);
+  margin: 0 0 8px;
+}
+
+.co-confirmation-email-notice {
+  font-size: 13px;
+  color: var(--co-text-secondary);
+  margin: 0 0 24px;
+}
+
+.co-confirmation-code-block {
+  background: var(--co-surface);
+  border: 1px solid var(--co-border);
+  border-radius: 8px;
+  padding: 16px 24px;
+  margin-bottom: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.co-confirmation-code-label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--co-text-secondary);
+  margin-bottom: 6px;
+}
+
+.co-confirmation-code {
+  display: block;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--co-accent);
+  letter-spacing: 0.05em;
+}
+
+.co-confirmation-details {
+  width: 100%;
+  text-align: left;
+  font-size: 14px;
+  color: var(--co-text);
+  line-height: 1.8;
+  background: var(--co-surface);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+}
+
+.co-confirmation-upsells {
+  width: 100%;
+  text-align: left;
+  font-size: 13px;
+  color: var(--co-text-secondary);
+  background: var(--co-surface);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+}
+
+.co-confirmation-upsell-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+
+.co-confirmation-total {
+  width: 100%;
+  text-align: right;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--co-accent);
+  padding: 8px 0;
+  border-top: 1px solid var(--co-border);
+}
