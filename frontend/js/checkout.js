@@ -31,7 +31,9 @@
     selectedUpsells: [],     // array of upsell id strings
     upsellItems: [],         // catalog from /api/upsells
     paymentInfo: null,       // /api/payment-info response
-    currentStep: 0           // 0=closed, 1=step1, 2=step2, 3=step3
+    currentStep: 0,          // 0=closed, 1=step1, 2=step2, 3=step3, 4=step4
+    stripeInstance: null,    // Stripe() instance (created in initStripeElements)
+    cardElement: null        // Stripe CardElement (mounted to #card-element)
   };
 
   /* ----------------------------------------------------------
@@ -134,7 +136,8 @@
   var STEP_TITLES = {
     1: 'Review Your Stay',
     2: 'Your Details & Add-Ons',
-    3: 'Complete Your Booking'
+    3: 'Complete Your Booking',
+    4: 'Booking Confirmed!'
   };
 
   function goToStep(n) {
@@ -153,7 +156,8 @@
       target.classList.add('is-active');
     }
     // Update header
-    el('checkout-step-indicator').textContent = 'Step ' + n + ' of 2';
+    var totalSteps = (n >= 3) ? 4 : 2;
+    el('checkout-step-indicator').textContent = 'Step ' + n + ' of ' + totalSteps;
     el('checkout-title').textContent = STEP_TITLES[n] || 'Payment';
     state.currentStep = n;
     // Scroll drawer to top
@@ -375,6 +379,182 @@
   }
 
   /* ----------------------------------------------------------
+     Step 3 — Stripe Elements initialization
+  ---------------------------------------------------------- */
+  function initStripeElements(publishableKey, accountId) {
+    // Show elements form, hide fallback
+    el('stripe-elements-form').removeAttribute('hidden');
+    el('checkout-payment-fallback').setAttribute('hidden', '');
+
+    // Populate charge notice
+    var remaining = state.selectedRatePlan ? (state.selectedRatePlan.totals.total - 50) : 0;
+    el('co-charge-notice').textContent = 'You will be charged $50 today. Remaining ' + formatMoney(remaining) + ' will be charged 14 days before check-in.';
+
+    // Initialize Stripe with connected account
+    state.stripeInstance = Stripe(publishableKey, { stripeAccount: accountId });
+    var elements = state.stripeInstance.elements();
+
+    var cardStyle = {
+      base: {
+        color: '#f0ead6',
+        fontSize: '16px',
+        fontFamily: 'inherit',
+        '::placeholder': { color: '#a8a090' },
+        iconColor: '#c9a96e'
+      },
+      invalid: {
+        color: '#e07070',
+        iconColor: '#e07070'
+      }
+    };
+
+    state.cardElement = elements.create('card', { style: cardStyle, hidePostalCode: true });
+    state.cardElement.mount('#card-element');
+
+    // Show card errors inline
+    state.cardElement.on('change', function (event) {
+      var errorDiv = el('card-errors');
+      if (event.error) {
+        errorDiv.textContent = event.error.message;
+        errorDiv.removeAttribute('hidden');
+      } else {
+        errorDiv.textContent = '';
+        errorDiv.setAttribute('hidden', '');
+      }
+    });
+
+    // Policy checkbox controls confirm button
+    var policyCheckbox = el('co-policy-checkbox');
+    var confirmBtn = el('co-confirm-btn');
+    confirmBtn.disabled = true;
+    policyCheckbox.checked = false;
+    policyCheckbox.addEventListener('change', function () {
+      confirmBtn.disabled = !policyCheckbox.checked;
+    });
+  }
+
+  /* ----------------------------------------------------------
+     Step 3 — Submit payment (create PaymentMethod → call /api/book)
+  ---------------------------------------------------------- */
+  function submitPayment() {
+    if (!state.stripeInstance || !state.cardElement) {
+      showError('Payment form not ready. Please try again.', FALLBACK_URL);
+      return;
+    }
+
+    showSpinner('Processing payment...');
+    hideError();
+
+    state.stripeInstance.createPaymentMethod({
+      type: 'card',
+      card: state.cardElement,
+      billing_details: {
+        name: state.guest.firstName + ' ' + state.guest.lastName,
+        email: state.guest.email,
+        phone: state.guest.phone
+      }
+    }).then(function (result) {
+      if (result.error) {
+        hideSpinner();
+        var errorDiv = el('card-errors');
+        errorDiv.textContent = result.error.message;
+        errorDiv.removeAttribute('hidden');
+        // Re-enable confirm button if policy still checked
+        var policyCheckbox = el('co-policy-checkbox');
+        el('co-confirm-btn').disabled = !policyCheckbox.checked;
+        return;
+      }
+
+      var pmToken = result.paymentMethod.id;
+
+      var bookBody = JSON.stringify({
+        quoteId: state.quote._id,
+        ratePlanId: state.selectedRatePlan.ratePlanId,
+        ccToken: pmToken,
+        guest: state.guest,
+        upsells: state.selectedUpsells,
+        checkIn: state.checkIn,
+        checkOut: state.checkOut
+      });
+
+      fetch(API_BASE + '/api/book', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: bookBody
+      })
+        .then(function (resp) {
+          return resp.json().then(function (data) {
+            return { ok: resp.ok, status: resp.status, data: data };
+          });
+        })
+        .then(function (res) {
+          hideSpinner();
+          if (!res.ok) {
+            var msg = (res.data && res.data.error)
+              ? res.data.error
+              : 'Booking failed. Please try again or use the partner portal.';
+            showError(msg, (res.data && res.data.fallbackUrl) || FALLBACK_URL);
+            // Reset card element — token is single-use
+            if (state.cardElement) state.cardElement.clear();
+            el('co-confirm-btn').disabled = true;
+            el('co-policy-checkbox').checked = false;
+            return;
+          }
+          renderStep4(res.data);
+          goToStep(4);
+        })
+        .catch(function () {
+          hideSpinner();
+          showError('Connection error during booking. Please try again.', FALLBACK_URL);
+          if (state.cardElement) state.cardElement.clear();
+          el('co-confirm-btn').disabled = true;
+          el('co-policy-checkbox').checked = false;
+        });
+    });
+  }
+
+  /* ----------------------------------------------------------
+     Step 4 — Render confirmation screen
+  ---------------------------------------------------------- */
+  function renderStep4(bookingData) {
+    el('co-confirmation-code').textContent = bookingData.confirmationCode || '—';
+
+    el('co-confirmation-email-notice').textContent =
+      'A confirmation email has been sent to ' + escapeHtml(state.guest.email) + '.';
+
+    // Details block: property, guest, dates
+    var dtf = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+    var detailsHtml = '';
+    detailsHtml += '<div><strong>Property:</strong> Sunshine Canyon Retreat</div>';
+    detailsHtml += '<div><strong>Guest:</strong> ' + escapeHtml(state.guest.firstName) + ' ' + escapeHtml(state.guest.lastName) + '</div>';
+    detailsHtml += '<div><strong>Check-in:</strong> ' + dtf.format(new Date(state.checkIn)) + '</div>';
+    detailsHtml += '<div><strong>Check-out:</strong> ' + dtf.format(new Date(state.checkOut)) + '</div>';
+    el('co-confirmation-details').innerHTML = detailsHtml;
+
+    // Upsells block
+    var selectedUpsellItems = state.upsellItems.filter(function (item) {
+      return state.selectedUpsells.indexOf(item.id) !== -1;
+    });
+    if (selectedUpsellItems.length > 0) {
+      var upsellHtml = '<div style="font-weight:600;margin-bottom:8px;color:var(--co-text)">Add-Ons Selected</div>';
+      selectedUpsellItems.forEach(function (item) {
+        upsellHtml += '<div class="co-confirmation-upsell-row"><span>' + escapeHtml(item.name) + '</span><span>' + formatMoney(item.price) + '</span></div>';
+      });
+      el('co-confirmation-upsells').innerHTML = upsellHtml;
+      el('co-confirmation-upsells').removeAttribute('hidden');
+    } else {
+      el('co-confirmation-upsells').setAttribute('hidden', '');
+    }
+
+    // Total
+    if (state.selectedRatePlan && state.selectedRatePlan.totals) {
+      var upsellTotal = selectedUpsellItems.reduce(function (sum, item) { return sum + item.price; }, 0);
+      var grandTotal = state.selectedRatePlan.totals.total + upsellTotal;
+      el('co-confirmation-total').textContent = 'Total: ' + formatMoney(grandTotal);
+    }
+  }
+
+  /* ----------------------------------------------------------
      Form validation
   ---------------------------------------------------------- */
   function validateField(fieldId, errorId, validatorFn) {
@@ -450,7 +630,7 @@
           el('checkout-title').textContent = 'Complete Your Booking';
         } else {
           el('checkout-payment-fallback').setAttribute('hidden', '');
-          // Phase 6 will initialize Stripe Elements here
+          initStripeElements(data.stripePublishableKey, data.stripeAccountId);
         }
       })
       .catch(function () {
@@ -481,6 +661,13 @@
 
     // Guest form submit
     el('checkout-guest-form').addEventListener('submit', handleGuestFormSubmit);
+
+    // Step 3 back + confirm
+    el('btn-back-to-step2').addEventListener('click', function () { goToStep(2); });
+    el('co-confirm-btn').addEventListener('click', submitPayment);
+
+    // Step 4 done
+    el('btn-confirmation-done').addEventListener('click', closeDrawer);
 
     // Blur-time field validation
     el('field-first-name').addEventListener('blur', function () {
