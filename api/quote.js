@@ -47,14 +47,15 @@ export default async function handler(req, res) {
 
     if (!qResp.ok) {
       const errText = await qResp.text().catch(() => '');
-      console.error('[quote] BEAPI error:', qResp.status, errText.substring(0, 500));
+      console.error('[quote] BEAPI error:', qResp.status, errText);
 
       // Parse structured error from Guesty
       let parsed = {};
       try { parsed = JSON.parse(errText); } catch (_) {}
       const code = parsed?.error?.code || '';
+      const message = parsed?.error?.message || '';
 
-      if (code === 'LISTING_IS_NOT_AVAILABLE' || qResp.status === 400) {
+      if (code === 'LISTING_IS_NOT_AVAILABLE') {
         return res.status(400).json({
           error: 'These dates are not available.',
           code: 'NOT_AVAILABLE',
@@ -62,8 +63,18 @@ export default async function handler(req, res) {
         });
       }
 
+      if (code === 'WRONG_REQUEST_PARAMETERS') {
+        return res.status(400).json({
+          error: 'Invalid request: ' + message,
+          code: 'VALIDATION_ERROR',
+          detail: parsed?.error?.data?.errors || [],
+          fallbackUrl: FALLBACK_URL,
+        });
+      }
+
       return res.status(qResp.status).json({
-        error: 'Quote failed: ' + qResp.status,
+        error: 'Quote failed: ' + (message || qResp.status),
+        code: code || 'QUOTE_FAILED',
         fallbackUrl: FALLBACK_URL,
       });
     }
