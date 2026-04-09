@@ -1,70 +1,124 @@
-// api/quote.js — DEBUG version to see full token error
-let cachedToken=null;
-let tokenExpiry=0;
+// api/quote.js — Booking Engine API Reservation Quote Flow
+// POST /api/quote { checkIn, checkOut, guests }
+// Returns quote with pricing breakdown in the shape the frontend expects.
 
-async function getToken(){
-  if(cachedToken&&Date.now()<tokenExpiry-60000)return cachedToken;
-  const params=new URLSearchParams({
-    grant_type:"client_credentials",scope:"open-api",
-    client_id:process.env.GUESTY_CLIENT_ID,
-    client_secret:process.env.GUESTY_CLIENT_SECRET,
-  });
-  console.log('TOKEN_REQ client_id_len:', (process.env.GUESTY_CLIENT_ID||'').length);
-  console.log('TOKEN_REQ secret_len:', (process.env.GUESTY_CLIENT_SECRET||'').length);
-  const resp=await fetch("https://open-api.guesty.com/oauth2/token",{
-    method:"POST",
-    headers:{"Accept":"application/json","Content-Type":"application/x-www-form-urlencoded"},
-    body:params.toString(),
-  });
-  console.log('TOKEN_RESP status:', resp.status);
-  if(!resp.ok){
-    const t=await resp.text().catch(()=>'');
-    console.error('TOKEN_BODY_1:', t.substring(0,200));
-    console.error('TOKEN_BODY_2:', t.substring(200,400));
-    throw new Error('token '+resp.status);
+import { beapiFetch } from '../lib/guesty-beapi.js';
+
+const FALLBACK_URL = 'https://svpartners.guestybookings.com/en/properties/693366e4e2c2460012d9ed96';
+const ALLOWED_ORIGINS = [
+  'https://mattgshepard-prog.github.io',
+  'http://localhost:3000',
+  'http://localhost:8080',
+];
+
+function setCors(req, res) {
+  const origin = req.headers.origin || '';
+  const allowed = ALLOWED_ORIGINS.find(o => origin.startsWith(o));
+  res.setHeader('Access-Control-Allow-Origin', allowed || '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+}
+
+export default async function handler(req, res) {
+  setCors(req, res);
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  const { checkIn, checkOut, guests } = req.body || {};
+  if (!checkIn || !checkOut) {
+    return res.status(400).json({ error: 'checkIn and checkOut are required', fallbackUrl: FALLBACK_URL });
   }
-  const data=await resp.json();
-  cachedToken=data.access_token;
-  tokenExpiry=Date.now()+(data.expires_in*1000);
-  return cachedToken;
-}
 
-const FALLBACK='https://svpartners.guestybookings.com/en/properties/693366e4e2c2460012d9ed96';
+  const listingId = process.env.GUESTY_LISTING_ID || '693366e4e2c2460012d9ed96';
 
-function setCors(req,res){
-  const o=req.headers.origin||'';
-  const a=['https://mattgshepard-prog.github.io','http://localhost:3000'].find(x=>o.startsWith(x));
-  res.setHeader('Access-Control-Allow-Origin',a||'*');
-  res.setHeader('Access-Control-Allow-Methods','POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers','Content-Type');
-}
-
-export default async function handler(req,res){
-  setCors(req,res);
-  if(req.method==='OPTIONS')return res.status(200).end();
-  if(req.method!=='POST')return res.status(405).json({error:'Method not allowed'});
-  const{checkIn,checkOut,guests}=req.body||{};
-  if(!checkIn||!checkOut)return res.status(400).json({error:'checkIn/checkOut required'});
-  try{
-    const token=await getToken();
-    console.log('TOKEN_OK len:', token.length);
-    const listingId=process.env.GUESTY_LISTING_ID||'693366e4e2c2460012d9ed96';
-    const qResp=await fetch('https://open-api.guesty.com/v1/quotes',{
-      method:'POST',
-      headers:{'Authorization':'Bearer '+token,'Accept':'application/json','Content-Type':'application/json'},
-      body:JSON.stringify({listingId,checkInDateLocalized:checkIn,checkOutDateLocalized:checkOut,guestsCount:parseInt(guests)||2,source:'OAPI',ignoreTerms:false,ignoreCalendar:false,ignoreBlocks:false}),
+  try {
+    // BEAPI uses checkInDateLocalized / checkOutDateLocalized
+    const body = JSON.stringify({
+      listingId,
+      checkInDateLocalized: checkIn,
+      checkOutDateLocalized: checkOut,
+      guestsCount: parseInt(guests) || 2,
     });
-    console.log('QUOTE_RESP status:', qResp.status);
-    if(!qResp.ok){
-      const e=await qResp.text().catch(()=>'');
-      console.error('QUOTE_ERR_1:', e.substring(0,200));
-      console.error('QUOTE_ERR_2:', e.substring(200,400));
-      return res.status(qResp.status).json({error:'Quote failed: '+qResp.status,detail:e.substring(0,300),fallbackUrl:FALLBACK});
+
+    const qResp = await beapiFetch('https://booking.guesty.com/api/reservations/quotes', {
+      method: 'POST',
+      body,
+    });
+
+    if (!qResp.ok) {
+      const errText = await qResp.text().catch(() => '');
+      console.error('[quote] BEAPI error:', qResp.status, errText.substring(0, 500));
+
+      // Parse structured error from Guesty
+      let parsed = {};
+      try { parsed = JSON.parse(errText); } catch (_) {}
+      const code = parsed?.error?.code || '';
+
+      if (code === 'LISTING_IS_NOT_AVAILABLE' || qResp.status === 400) {
+        return res.status(400).json({
+          error: 'These dates are not available.',
+          code: 'NOT_AVAILABLE',
+          fallbackUrl: FALLBACK_URL,
+        });
+      }
+
+      return res.status(qResp.status).json({
+        error: 'Quote failed: ' + qResp.status,
+        fallbackUrl: FALLBACK_URL,
+      });
     }
-    const data=await qResp.json();
-    return res.status(200).json({quoteId:data._id,expiresAt:data.expiresAt,ratePlans:data.rates&&data.rates.ratePlans||[],raw:data});
-  }catch(err){
-    console.error('CATCH:',err.message);
-    return res.status(500).json({error:err.message,fallbackUrl:FALLBACK});
+
+    const data = await qResp.json();
+
+    // Transform BEAPI response into the shape the frontend expects:
+    // { quoteId, expiresAt, ratePlans: [{ ratePlanId, name, days, totals }] }
+    const ratePlans = (data.rates?.ratePlans || []).map(rp => {
+      const plan = rp.ratePlan || {};
+      const money = plan.money || {};
+      const invoiceItems = money.invoiceItems || [];
+
+      // Extract totals from invoiceItems
+      const accommodation = invoiceItems
+        .filter(i => i.normalType === 'AF')
+        .reduce((s, i) => s + (i.amount || 0), 0);
+      const cleaning = invoiceItems
+        .filter(i => i.normalType === 'CF')
+        .reduce((s, i) => s + (i.amount || 0), 0);
+      const taxes = invoiceItems
+        .filter(i => i.normalType === 'LT' || i.type === 'TAX')
+        .reduce((s, i) => s + (i.amount || 0), 0);
+      const fees = (money.totalFees || 0) - cleaning; // totalFees includes cleaning
+      const total = accommodation + cleaning + Math.max(fees, 0) + taxes;
+
+      return {
+        ratePlanId: plan._id,
+        name: plan.name || 'Standard',
+        cancellationPolicy: plan.cancellationPolicy || 'moderate',
+        days: (rp.days || []).map(d => ({
+          date: d.date,
+          price: d.price,
+          minNights: d.minNights,
+        })),
+        totals: {
+          accommodation,
+          cleaning,
+          fees: Math.max(fees, 0),
+          taxes,
+          total,
+          currency: money.currency || 'USD',
+          hostPayout: money.hostPayout || total,
+        },
+      };
+    });
+
+    return res.status(200).json({
+      quoteId: data._id,
+      expiresAt: data.expiresAt,
+      ratePlans,
+    });
+
+  } catch (err) {
+    console.error('[quote] Error:', err.message);
+    return res.status(500).json({ error: err.message, fallbackUrl: FALLBACK_URL });
   }
 }
