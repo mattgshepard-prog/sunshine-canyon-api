@@ -1,7 +1,8 @@
 // api/payment-info.js
 // GET /api/payment-info
-// Returns Stripe keys from env vars. No Guesty call needed.
-// Requirements: PAY-01, PAY-02
+// Returns Stripe publishable key from env vars.
+// Sebastian's account is a direct Stripe account (not Connect),
+// so stripeAccountId is NOT used — Stripe.js initialises with just the pk.
 
 const FALLBACK_URL = 'https://svpartners.guestybookings.com/en/properties/693366e4e2c2460012d9ed96';
 const ALLOWED_ORIGINS = [
@@ -23,12 +24,10 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   const stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY || null;
-  const stripeAccountId = process.env.STRIPE_ACCOUNT_ID || null;
 
-  // Graceful degradation — missing key is NOT an error (PAY-02)
   return res.status(200).json({
     providerType: 'stripe',
-    stripeAccountId: stripePublishableKey ? stripeAccountId : null,
+    stripeAccountId: null,          // direct account, not Connect
     stripePublishableKey,
     fallbackUrl: FALLBACK_URL,
   });
