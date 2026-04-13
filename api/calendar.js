@@ -3,19 +3,31 @@ let tokenExpiry=0;
 
 async function getToken(){
   if(cachedToken&&Date.now()<tokenExpiry-60000)return cachedToken;
+  const clientId = process.env.GUESTY_CLIENT_ID;
+  const clientSecret = process.env.GUESTY_CLIENT_SECRET;
+  console.log('[calendar] Token request with client_id:', clientId ? clientId.substring(0, 8) + '...' : 'MISSING');
+  if (!clientId || !clientSecret) {
+    throw new Error('GUESTY_CLIENT_ID or GUESTY_CLIENT_SECRET is missing from env vars');
+  }
   const params=new URLSearchParams({
     grant_type:"client_credentials",scope:"open-api",
-    client_id:process.env.GUESTY_CLIENT_ID,
-    client_secret:process.env.GUESTY_CLIENT_SECRET,
+    client_id:clientId,
+    client_secret:clientSecret,
   });
   const resp=await fetch("https://open-api.guesty.com/oauth2/token",{
     method:"POST",
     headers:{"Accept":"application/json","Content-Type":"application/x-www-form-urlencoded"},
     body:params.toString(),
   });
+  if (!resp.ok) {
+    const errText = await resp.text().catch(() => '');
+    console.error('[calendar] Token error:', resp.status, errText.substring(0, 500));
+    throw new Error('Open API token error: ' + resp.status + ' ' + errText.substring(0, 200));
+  }
   const data=await resp.json();
   cachedToken=data.access_token;
   tokenExpiry=Date.now()+(data.expires_in*1000);
+  console.log('[calendar] Token obtained, expires in', data.expires_in, 's');
   return cachedToken;
 }
 
@@ -31,12 +43,23 @@ export default async function handler(req,res){
     end.setDate(end.getDate()+90);
     const startDate=today.toISOString().split("T")[0];
     const endDate=end.toISOString().split("T")[0];
-    const calResp=await fetch(
-      `https://open-api.guesty.com/v1/availability-pricing/api/calendar/listings/${listingId}?startDate=${startDate}&endDate=${endDate}`,
+    const calUrl = `https://open-api.guesty.com/v1/availability-pricing/api/calendar/listings/${listingId}?startDate=${startDate}&endDate=${endDate}`;
+    console.log('[calendar] Fetching:', calUrl);
+    const calResp=await fetch(calUrl,
       {headers:{"Authorization":`Bearer ${token}`,"Accept":"application/json"}}
     );
+    console.log('[calendar] Guesty response status:', calResp.status);
+    if (!calResp.ok) {
+      const errText = await calResp.text().catch(() => '');
+      console.error('[calendar] Guesty calendar error:', calResp.status, errText.substring(0, 500));
+      return res.status(500).json({error: 'Guesty calendar error: ' + calResp.status, detail: errText.substring(0, 200), fallbackUrl: 'https://svpartners.guestybookings.com/en/properties/693366e4e2c2460012d9ed96'});
+    }
     const calData=await calResp.json();
     const days=calData?.data?.days||[];
+    console.log('[calendar] Days returned:', days.length, '| Raw keys:', Object.keys(calData).join(', '));
+    if (days.length === 0) {
+      console.warn('[calendar] Zero days returned. Raw response (first 500 chars):', JSON.stringify(calData).substring(0, 500));
+    }
     const calendar=days.map(d=>({
       date:d.date,price:d.price,status:d.status,
       minNights:d.minNights,available:d.status==="available",
@@ -56,7 +79,7 @@ export default async function handler(req,res){
       summary,calendar,
     });
   }catch(err){
-    console.error("Guesty API error:",err);
-    return res.status(500).json({error:"Failed to fetch calendar data"});
+    console.error("[calendar] Fatal error:", err.message, err.stack);
+    return res.status(500).json({error:"Failed to fetch calendar data", detail: err.message});
   }
 }
