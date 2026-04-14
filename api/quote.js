@@ -84,40 +84,38 @@ export default async function handler(req, res) {
     // Transform BEAPI response into the shape the frontend expects:
     // { quoteId, expiresAt, ratePlans: [{ ratePlanId, name, days, totals }] }
     //
-    // FIX (2026-04-14): Use Guesty's pre-calculated money fields instead of
-    // manually summing invoiceItems by normalType. The old approach silently
-    // dropped fees with normalType values we weren't filtering for (e.g. AFE,
-    // SF, service fees, management fees), causing the website total to be lower
-    // than what Guesty's dashboard shows. The money object already has the
-    // correct totals — use them directly.
+    // FIX v2 (2026-04-14): hostPayout is the HOST's payout after Guesty's
+    // service fee — NOT the guest-facing total. The guest pays:
+    //   subTotalPrice + totalTaxes
+    // where subTotalPrice = fareAccommodation + totalFees (cleaning + other fees).
     const ratePlans = (data.rates?.ratePlans || []).map(rp => {
       const plan = rp.ratePlan || {};
       const money = plan.money || {};
-      const invoiceItems = money.invoiceItems || [];
 
       // Use Guesty's authoritative pre-calculated fields
       const accommodation = money.fareAccommodation || 0;
       const cleaning = money.fareCleaning || 0;
       const totalFees = money.totalFees || 0;
       const subTotal = money.subTotalPrice || 0;
+      const totalTaxes = money.totalTaxes || 0;
       const hostPayout = money.hostPayout || 0;
 
       // Fees = totalFees minus cleaning (Guesty includes cleaning in totalFees)
       const fees = Math.max(totalFees - cleaning, 0);
 
-      // Taxes: subTotalPrice is pre-tax total, so taxes = hostPayout - subTotal
-      // But Guesty also provides taxes via invoiceItems for display breakdown.
-      // Use the difference for accuracy since it captures ALL tax types.
-      const taxes = Math.max(hostPayout - subTotal, 0);
+      // Guest-facing total = subTotal (accommodation + all fees) + taxes
+      const total = subTotal + totalTaxes;
 
-      // Total should match hostPayout (what the guest actually pays)
-      const total = hostPayout;
-
-      // Log for debugging — remove once confirmed stable
+      // Log for debugging
       console.log('[quote] Pricing breakdown:', JSON.stringify({
-        accommodation, cleaning, fees, taxes, subTotal, hostPayout, total,
+        fareAccommodation: accommodation,
+        fareCleaning: cleaning,
+        totalFees,
+        subTotalPrice: subTotal,
+        totalTaxes,
+        hostPayout,
+        guestTotal: total,
         fareAccommodationAdjusted: money.fareAccommodationAdjusted,
-        invoiceItemCount: invoiceItems.length,
       }));
 
       return {
@@ -133,7 +131,7 @@ export default async function handler(req, res) {
           accommodation,
           cleaning,
           fees,
-          taxes,
+          taxes: totalTaxes,
           total,
           currency: money.currency || 'USD',
           hostPayout,
