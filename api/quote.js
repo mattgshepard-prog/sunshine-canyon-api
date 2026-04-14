@@ -83,23 +83,42 @@ export default async function handler(req, res) {
 
     // Transform BEAPI response into the shape the frontend expects:
     // { quoteId, expiresAt, ratePlans: [{ ratePlanId, name, days, totals }] }
+    //
+    // FIX (2026-04-14): Use Guesty's pre-calculated money fields instead of
+    // manually summing invoiceItems by normalType. The old approach silently
+    // dropped fees with normalType values we weren't filtering for (e.g. AFE,
+    // SF, service fees, management fees), causing the website total to be lower
+    // than what Guesty's dashboard shows. The money object already has the
+    // correct totals — use them directly.
     const ratePlans = (data.rates?.ratePlans || []).map(rp => {
       const plan = rp.ratePlan || {};
       const money = plan.money || {};
       const invoiceItems = money.invoiceItems || [];
 
-      // Extract totals from invoiceItems
-      const accommodation = invoiceItems
-        .filter(i => i.normalType === 'AF')
-        .reduce((s, i) => s + (i.amount || 0), 0);
-      const cleaning = invoiceItems
-        .filter(i => i.normalType === 'CF')
-        .reduce((s, i) => s + (i.amount || 0), 0);
-      const taxes = invoiceItems
-        .filter(i => i.normalType === 'LT' || i.type === 'TAX')
-        .reduce((s, i) => s + (i.amount || 0), 0);
-      const fees = (money.totalFees || 0) - cleaning; // totalFees includes cleaning
-      const total = accommodation + cleaning + Math.max(fees, 0) + taxes;
+      // Use Guesty's authoritative pre-calculated fields
+      const accommodation = money.fareAccommodation || 0;
+      const cleaning = money.fareCleaning || 0;
+      const totalFees = money.totalFees || 0;
+      const subTotal = money.subTotalPrice || 0;
+      const hostPayout = money.hostPayout || 0;
+
+      // Fees = totalFees minus cleaning (Guesty includes cleaning in totalFees)
+      const fees = Math.max(totalFees - cleaning, 0);
+
+      // Taxes: subTotalPrice is pre-tax total, so taxes = hostPayout - subTotal
+      // But Guesty also provides taxes via invoiceItems for display breakdown.
+      // Use the difference for accuracy since it captures ALL tax types.
+      const taxes = Math.max(hostPayout - subTotal, 0);
+
+      // Total should match hostPayout (what the guest actually pays)
+      const total = hostPayout;
+
+      // Log for debugging — remove once confirmed stable
+      console.log('[quote] Pricing breakdown:', JSON.stringify({
+        accommodation, cleaning, fees, taxes, subTotal, hostPayout, total,
+        fareAccommodationAdjusted: money.fareAccommodationAdjusted,
+        invoiceItemCount: invoiceItems.length,
+      }));
 
       return {
         ratePlanId: plan._id,
@@ -113,11 +132,11 @@ export default async function handler(req, res) {
         totals: {
           accommodation,
           cleaning,
-          fees: Math.max(fees, 0),
+          fees,
           taxes,
           total,
           currency: money.currency || 'USD',
-          hostPayout: money.hostPayout || total,
+          hostPayout,
         },
       };
     });
