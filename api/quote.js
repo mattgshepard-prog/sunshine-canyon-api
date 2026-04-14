@@ -136,7 +136,6 @@ export default async function handler(req, res) {
           currency: money.currency || 'USD',
           hostPayout,
         },
-        _debug_money: money,
       };
     });
 
