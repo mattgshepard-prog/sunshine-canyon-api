@@ -78,8 +78,8 @@ The Sunshine Canyon Retreat website (mattgshepard-prog.github.io/sunshine-canyon
 **IMPORTANT: Store these as Vercel environment variables. Never expose in client-side code.**
 
 ```
-GUESTY_CLIENT_ID=REDACTED_CLIENT_ID
-GUESTY_CLIENT_SECRET=REDACTED_CLIENT_SECRET
+GUESTY_CLIENT_ID=${GUESTY_CLIENT_ID}
+GUESTY_CLIENT_SECRET=${GUESTY_CLIENT_SECRET}
 ```
 
 - **Token URL:** `https://booking.guesty.com/oauth2/token`
@@ -444,8 +444,8 @@ The site already calls `https://sunshine-canyon-api.vercel.app/api/calendar` for
 Add these to the `sunshine-canyon-api` Vercel project:
 
 ```
-GUESTY_CLIENT_ID=REDACTED_CLIENT_ID
-GUESTY_CLIENT_SECRET=REDACTED_CLIENT_SECRET
+GUESTY_CLIENT_ID=${GUESTY_CLIENT_ID}
+GUESTY_CLIENT_SECRET=${GUESTY_CLIENT_SECRET}
 GUESTY_LISTING_ID=<discover via search API, then hardcode>
 ```
 
